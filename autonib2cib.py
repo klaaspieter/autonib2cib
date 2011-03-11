@@ -5,68 +5,91 @@ import sys
 import os
 import commands
 import hashlib
-import getopt
+import baker
+import logging
+from colorlogger import *
 
 from pyfsevents import registerpath, listen
 
-def usage():
-	return 'usage: %s [PATH]' % os.path.basename(__file__)
+@baker.command
+def monitor(path, verbose=False):
 
-def main(argv=None):
-	if argv is None:
-		argv = sys.argv
+	logger = logging.getLogger('')
 
-	if len(argv) != 2:
-		print usage()
-		return 1
+	handler = logging.StreamHandler()
+	handler.setLevel(logging.DEBUG)
+	handler.setFormatter(ColorFormatter())
+	logger.addHandler(handler)
 
-	path = os.path.normcase(os.path.abspath(argv[1]))
+	if verbose:
+		logger.setLevel(logging.DEBUG)
+	else:
+		logger.setLevel(logging.INFO)
 
+	path = os.path.abspath(path)
+	
 	if not os.path.isdir(path):
-		print 'Not a directory: %s' % path
-		print usage()
-		return 1
-
+		logging.error('Not a directory: %s' % path)
+		return
+	
+	# We'll get a callback that the monitored directory changed. To determine
+	# which file was changed we keep a checksum and compare it when the directory
+	# change event is received
 	checksums = {}
+
 	files = os.listdir(path)
-
 	for filename in files:
-
-		if os.path.splitext(filename)[1] != '.xib':
+		
+		# Only monitor files with the .xib extension
+		if not isXibFile(filename):
 			continue
 
-		xibfile = file(os.path.join(path, filename), 'rb')
-
-		checksums[filename] = hashlib.md5(xibfile.read()).digest()
-
+		checksums[filename] = hashfile(os.path.join(path, filename))
+	
 	def rebuild(path, recursive):
-		
+
 		for filename in os.listdir(path):
 
-			if os.path.splitext(filename)[1] != '.xib':
+			if not isXibFile(filename):
 				continue
 
-			xibfile = file(os.path.join(path, filename), 'rb')
-			checksum = hashlib.md5(xibfile.read()).digest();
-
+			checksum = hashfile(os.path.join(path, filename))
 			cachedChecksum = checksums.get(filename, None)
+			
 			if cachedChecksum == None or cachedChecksum == checksum:
 				continue
 
+			# Cache the new checksum because it was changed
 			checksums[filename] = checksum
 
-			command = 'nib2cib %s -R %s' % (os.path.join(path, filename), path)
-
-			print command
-			output = commands.getstatusoutput(command)
-
-			assert output[0] == 0, output
+			# nib2cib doesn't support absolute paths for the resource path
+			# so we use the relative path for the -R option
+			command = 'nib2cib %s -R %s' % (os.path.join(path, filename), os.path.relpath(path))
+			
+			logging.info(command)
+			
+			output = commands.getstatusoutput(command)[1]
+			
+			# Unfortunately nib2cib doesn't return proper status so we can't log an error
+			# if it exited with a non zero exit status
+			# If you need to see errors, use verbose mode
+			if not ' '.join(output.split()):
+				logging.debug(' '.join(output.split()))
+			else:
+				logging.debug('No output')
 
 	registerpath(path, rebuild)
 
-	print 'Listening for changes at %s' % path
-
 	listen()
+	
+def isXibFile(filename):
+	return os.path.splitext(filename)[1] == '.xib'
 
-if __name__ == "__main__":
-	sys.exit(main())
+def hashfile(path):
+	return hashlib.md5(file(path, 'rb').read()).digest()
+
+# Prevent CTRL+C from logging a stacktrace
+try:
+	baker.run()
+except KeyboardInterrupt:
+	sys.exit(0)
