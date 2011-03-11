@@ -2,13 +2,11 @@ Autonib2cib is a command line utility that monitors a directory for changes in n
 
 # Installation
 
-autonib2cib requires pyfsevents and baker. Both can be installed with easy_install
+autonib2cib requires pyfsevents and baker. Both can be installed with easy_install.
 
-** pyfsevents **
-easy_install pyfsevents
+** pyfsevents **: `easy_install pyfsevents`
 
-** baker **
-easy_install baker
+** baker **: `easy_install: baker`
 
 # Usage
 
