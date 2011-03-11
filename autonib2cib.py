@@ -11,7 +11,11 @@ from colorlogger import *
 
 from pyfsevents import registerpath, listen
 
-@baker.command
+# @baker.command
+# def version():
+# 	print '0.1'
+
+@baker.command(default=True, shortopts={"versbose":"v"})
 def monitor(path, verbose=False):
 
 	logger = logging.getLogger('')
