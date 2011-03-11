@@ -56,7 +56,7 @@ def monitor(path, verbose=False):
 			checksum = hashfile(os.path.join(path, filename))
 			cachedChecksum = checksums.get(filename, None)
 			
-			if cachedChecksum == None or cachedChecksum == checksum:
+			if cachedChecksum == checksum:
 				continue
 
 			# Cache the new checksum because it was changed
