@@ -1,4 +1,4 @@
-Autonib2cib is a command line utility that monitors a directory for changes in nib files and automatically nib2cibs them.
+Cappuccino has been very successful at preserving the customary 'code and refresh' workflow for web developers. However, as any developer with more than a handful of cibs knows, having to manually run nib2cib breaks this workflow. Autonib2cib will solve this problem by automating the nib2cib process.
 
 # Installation
 
