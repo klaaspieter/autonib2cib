@@ -6,7 +6,10 @@ autonib2cib requires pyfsevents and baker. Both can be installed with easy_insta
 
 ** pyfsevents **: `easy_install pyfsevents`
 
-** baker **: `easy_install: baker`
+** baker **: `easy_install baker`
+
+** Note **: pyfsevents installation fails when XCode 4 is installed. If you have XCode 4 installed use [these](https://github.com/klaaspieter/autonib2cib/wiki/XCode-4-installation) instructions.
+
 
 # Usage
 
