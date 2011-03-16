@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
 # Created by Klaas Pieter Annema.
 # 
 # Copyright (c) 2011 Klaas Pieter Annema
@@ -22,9 +25,6 @@
 # WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
-
-#!/usr/bin/env python
-# encoding: utf-8
 
 import sys
 import os
