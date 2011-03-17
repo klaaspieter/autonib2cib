@@ -109,6 +109,8 @@ def monitor(path, verbose=False):
 
 	registerpath(path, rebuild)
 
+	logging.info('Listening for changes at \'%s\'' % path)
+
 	listen()
 	
 def isXibFile(filename):
