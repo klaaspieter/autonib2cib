@@ -93,7 +93,10 @@ def monitor(path, verbose=False):
 
 			# nib2cib doesn't support absolute paths for the resource path
 			# so we use the relative path for the -R option
-			command = 'nib2cib %s -R %s' % (os.path.join(path, filename), os.path.relpath(path))
+			xibpath = os.path.join(path, filename)
+			cibpath = os.path.join(path, os.path.splitext(filename)[0]) + ".cib"
+			
+			command = 'nib2cib %s %s -R %s' % (xibpath, cibpath, os.path.relpath(path))
 			
 			logging.info(command)
 			
