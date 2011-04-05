@@ -40,7 +40,7 @@ from pyfsevents import registerpath, listen
 # def version():
 # 	print '0.1'
 
-@baker.command(default=True, shortopts={"versbose":"v"}, params={"verbose": "Spew lots"})
+@baker.command(default=True, shortopts={"verbose":"v"}, params={"verbose": "Spew lots"})
 def monitor(path, verbose=False):
 
 	logger = logging.getLogger('')
